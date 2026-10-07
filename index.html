@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Online Test: Matrices, Binomial Theorem &amp; P&amp;C</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1b1f2a;--mut:#667;--pri:#3b5bdb;--bd:#dde1ea;--ok:#2f9e44;--bad:#e03131;--rev:#f08c00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161c;--card:#1d2029;--tx:#e8eaf0;--mut:#9aa;--pri:#748ffc;--bd:#333847}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:14px}
+input[type=text],input[type=email],input[type=number]{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font-size:16px;margin:4px 0 12px}
+button{font:inherit;padding:9px 16px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+button.p{background:var(--pri);color:#fff;border-color:var(--pri)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--card);border-bottom:1px solid var(--bd);padding:10px 16px}
+#timer{font:600 22px ui-monospace,monospace}#timer.low{color:var(--bad)}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--bd);border-radius:8px;padding:10px;margin:8px 0;cursor:pointer}
+.opt.sel{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 12%,transparent)}
+.pal{display:flex;flex-wrap:wrap;gap:6px}.pal button{width:40px;padding:6px 0}
+.pal .ans{background:var(--ok);color:#fff}.pal .rv{background:var(--rev);color:#fff}.pal .cur{outline:2px solid var(--pri)}
+.tag{font-size:13px;color:var(--mut)}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.hide{display:none}
+</style></head><body>
+<div id="start" class="wrap"><div class="card">
+<h2>Online Test</h2>
+<p class="tag">Matrices · Binomial Theorem · Permutations &amp; Combinations</p>
+<p><b>Duration:</b> 90 minutes &nbsp; <b>Total:</b> 100 marks &nbsp; <b>Questions:</b> 26</p>
+<ul>
+<li>Section A: 10 single-correct, +3 each, −1 for a wrong answer (30)</li>
+<li>Section B: 10 multiple-correct, +4 for all correct options; partial marking: +1 for each correct option chosen if no wrong option is chosen; −2 if any wrong option is chosen; 0 if unattempted (40)</li>
+<li>Section C: 6 numerical (integer), +5 each, no negative (30)</li>
+</ul>
+<p>The timer starts as soon as you click Start and the test auto-submits at 0:00.</p>
+<label>Full name</label><input type="text" id="nm" autocomplete="name">
+<label>Email ID</label><input type="email" id="em" autocomplete="email">
+<div id="err" class="bad"></div>
+<button class="p" onclick="begin()">Start Test</button></div></div>
+
+<div id="exam" class="hide"><div class="top"><div><b id="who"></b><div class="tag" id="sec"></div></div><div id="timer"></div></div>
+<div class="wrap"><div class="card" id="q"></div>
+<div class="row" style="margin:0 0 14px"><button onclick="go(-1)">← Prev</button><button onclick="rev()">Mark for review</button><button onclick="clr()">Clear</button><button class="p" onclick="go(1)">Save &amp; Next →</button></div>
+<div class="card"><div class="pal" id="pal"></div><p class="tag">Green = answered · Orange = marked for review</p>
+<button class="p" onclick="submit(false)">Submit Test</button></div></div></div>
+
+<div id="res" class="hide wrap"></div>
+
+<script>
+const S=(t,o,a)=>({t:'s',q:t,o,a}),M=(t,o,a)=>({t:'m',q:t,o,a}),N=(t,a)=>({t:'n',q:t,a});
+const Q=[
+S('The number of solutions of the matrix equation X² = I other than I is (I is the 2×2 unit matrix)',['0','1','2','more than 2'],'D'),
+S('a, b, c are positive real numbers. The system x²/a² + y²/b² − z²/c² = 1; x²/a² − y²/b² + z²/c² = 1; −x²/a² + y²/b² + z²/c² = 1 has',['no solution','unique solution','infinitely many solutions','finite number of solutions'],'D'),
+S('A and B are square matrices such that A + B = AB. Then',['AB = BA','AB − BA = I','AB + BA = 0','AB + BA = I'],'A'),
+S('The value of the greatest term in √3(1 + 1/√3)<sup>20</sup> is',['<sup>20</sup>C<sub>0</sub>/25','<sup>20</sup>C<sub>7</sub>/27','<sup>15</sup>C<sub>6</sub>/23','20C<sub>6</sub>'],'B'),
+S('For natural numbers m, n if (1−y)<sup>m</sup>(1+y)<sup>n</sup> = 1 + a<sub>1</sub>y + a<sub>2</sub>y² + … and a<sub>1</sub> = a<sub>2</sub> = 10, then (m, n) is',['(45, 35)','(35, 45)','(20, 45)','(35, 20)'],'B'),
+S('The number of terms in the expansion of (a + b + c + d)<sup>5</sup> is',['20','120','336','56'],'D'),
+S('The number of nonzero terms in the expansion of (a + b√2)<sup>20</sup> − (a − b√2)<sup>20</sup> is',['20','10','11','42'],'B'),
+S('How many times is the digit 5 written when listing all numbers from 1 to 1,00,000?',['5 × 10⁴','1 + 10 + 100 + 1000 + 10000','5 × 10³','1 + 10 + 100 + 1000'],'A'),
+S('Let x<sub>1</sub>, x<sub>2</sub>, …, x<sub>k</sub> be all the divisors of a positive integer n. If Σx<sub>i</sub> = 93 and Σ(1/x<sub>i</sub>) = 93/50, then k is',['4','3','6','7'],'C'),
+S('The number of divisors of 189000 which have exactly 4 factors (including 1 and the number itself) is',['<sup>10</sup>C<sub>2</sub>','36','6','9'],'D'),
+
+M('If X is a real column matrix and A is a 3rd order square matrix, choose the correct statement(s):',['XX<sup>T</sup> is a singular matrix','If A<sup>T</sup>A = 0 then A = 0, provided A is a real matrix','If AA<sup>T</sup> = I then A<sup>T</sup>A need not be equal to I','If A<sup>10</sup> = 0 then (I + A + A² + … + A⁹)<sup>−1</sup> = I − A'],'ABD'),
+M('Find integral matrices B and C such that A = [[−1, 1],[0, −2]] = B³ + C³. Which are correct?',['B = [[0, 1],[0, −1]]','C = [[−1, 0],[0, −1]]','B = [[0, 1],[0, 1]]','C = [[−1, 0],[0, 1]]'],'AB'),
+M('Let R = (8 + 3√7)<sup>20</sup> and [R] = greatest integer ≤ R. Then',['[R] is even','[R] is odd','R − [R] = 1 − 1/(8 + 3√4)<sup>20</sup>','R + R[R] = 1 + R²'],'BCD'),
+M('Which of the following is/are true?',['The last two digits of 3<sup>100</sup> will be 73','The last two digits of 3<sup>50</sup> will be 51','The last two digits of 3<sup>50</sup> will be 49','The last three digits of 3<sup>50</sup> will be 249'],'BD'),
+M('If n is a positive integer and (3√3 + 5)<sup>2n+1</sup> = α + β, where α is an integer and 0 &lt; β &lt; 1, then',['α is an even integer','(α + β)β = 2<sup>2n+1</sup>','the integer just below (3√3 + 5)<sup>2n+1</sup> is divisible by 3','α is divisible by 10'],'ABD'),
+M('In the expansion of (7<sup>1/3</sup> + 11<sup>1/9</sup>)<sup>6561</sup>,',['There are exactly 730 rational terms','There are exactly 5832 irrational terms','The term involving the greatest binomial coefficient is irrational','The term involving the greatest binomial coefficient is rational'],'ABCD'),
+M('The value of <sup>1000</sup>C<sub>50</sub> + <sup>999</sup>C<sub>49</sub> + <sup>998</sup>C<sub>48</sub> + … + <sup>950</sup>C<sub>0</sub> is',['<sup>1001</sup>C<sub>50</sub>','<sup>1002</sup>C<sub>51</sub> − <sup>1001</sup>C<sub>51</sub>','<sup>1001</sup>C<sub>951</sub>','<sup>1002</sup>C<sub>51</sub> − <sup>1001</sup>C<sub>950</sub>'],'ABCD'),
+M('Sadhana has 10 friends, two of whom are married to each other. She wishes to invite 5 of them. If the married couple refuse to attend separately, the number of ways she can invite five friends is',['<sup>8</sup>C<sub>5</sub>','2 × <sup>8</sup>C<sub>5</sub>','<sup>10</sup>C<sub>5</sub> − 2 × <sup>8</sup>C<sub>4</sub>','2 × <sup>8</sup>C<sub>4</sub>'],'BC'),
+M('There are 7 pigeons and 7 holes. If m is the number of ways they go into the holes one each so that none goes to its natural habitat, mark all possible alternatives for m.',['1854','7! − <sup>7</sup>C<sub>1</sub>6! + <sup>7</sup>C<sub>2</sub>5! − <sup>7</sup>C<sub>3</sub>4! + <sup>7</sup>C<sub>4</sub>3! − <sup>7</sup>C<sub>5</sub>2! + <sup>7</sup>C<sub>6</sub> − 1','7!/2! − 7!/3! + 7!/4! − 7!/5! + 7!/6!','1853'],'AB'),
+M('3 countries sent 2 delegates each and 3 other countries sent one delegate each. The number of ways they can be seated in a row so that delegates of the same country are not side by side is x. Mark all correct alternatives for x.',['244 × 720','3 × 8! + 760 × 6! − 5!','9! − 6(8!) + 12(7!) − 8(6!)','9! − 6(8!) + 12(7!)'],'AC'),
+
+N('Consider matrices A = [a<sub>ij</sub>] of order 3×5, B = [b<sub>ij</sub>] of order 5×10 and C = AB = [c<sub>ij</sub>]. Given a<sub>ij</sub> = i/(3j − 2) and b<sub>ij</sub> = j/(3i + 1), the value of C<sub>28</sub> is',5),
+N('If the maximum number of distinct elements in a 7th order skew-symmetric matrix is N, find the sum of the digits of N.',7),
+N('If x, y ∈ R, X = [x y 1]<sup>T</sup>, A = [[5, 3, −1],[3, 2, −1],[−1, −1, 1]] and X<sup>T</sup>AX = 0, then the value of 2y + x is',3),
+N('If 3<sup>101</sup> − 2<sup>100</sup> is divided by 11, the remainder is',2),
+N('The coefficient of x⁶ in ((1+x)(1+x²)²(1+x³)³ … (1+x<sup>n</sup>)<sup>n</sup>) is 4k. The numerical value of k is',7),
+N('Six cards and six envelopes are numbered 1–6; each envelope contains exactly one card, no card is in the envelope with the same number, and card 1 is always in envelope 2. If the number of ways is n, then 106/n is',2)
+];
+const SEC=['A · Single correct (+3, −1)','B · Multiple correct (+4, partial, −2)','C · Numerical (+5)'];
+const MK={s:3,m:4,n:5},DUR=90*60;
+let ans=[],rv=[],cur=0,end,tick,user={};
+const $=i=>document.getElementById(i);
+function begin(){
+ const n=$('nm').value.trim(),e=$('em').value.trim();
+ if(n.length<2)return $('err').textContent='Please enter your full name.';
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))return $('err').textContent='Please enter a valid email ID.';
+ user={n,e};ans=Q.map(q=>q.t==='m'?[]:'');rv=Q.map(()=>false);
+ $('start').classList.add('hide');$('exam').classList.remove('hide');$('who').textContent=n+' ('+e+')';
+ end=Date.now()+DUR*1000;tick=setInterval(upd,500);upd();show(0);
+}
+function upd(){
+ let s=Math.max(0,Math.round((end-Date.now())/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;
+ const t=$('timer');t.textContent=(h?h+':':'')+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0');
+ t.classList.toggle('low',s<300);if(s<=0)submit(true);
+}
+function show(i){
+ cur=i;const q=Q[i],L='ABCD';let h=`<div class="tag">Question ${i+1} of ${Q.length} · ${SEC[q.t==='s'?0:q.t==='m'?1:2]} · ${MK[q.t]} marks</div><p><b>${q.q}</b></p>`;
+ if(q.t==='n')h+=`<input type="number" step="1" placeholder="Enter integer answer" value="${ans[i]}" oninput="ans[${i}]=this.value;pal()">`;
+ else q.o.forEach((o,k)=>{const sel=q.t==='s'?ans[i]===L[k]:ans[i].includes(L[k]);
+  h+=`<div class="opt ${sel?'sel':''}" onclick="pick(${k})"><b>${L[k]}</b><span>${o}</span></div>`});
+ if(q.t==='m')h+='<div class="tag">One or more options may be correct.</div>';
+ $('q').innerHTML=h;$('sec').textContent=SEC[q.t==='s'?0:q.t==='m'?1:2];pal();
+}
+function pick(k){const q=Q[cur],l='ABCD'[k];
+ if(q.t==='s')ans[cur]=ans[cur]===l?'':l;
+ else ans[cur]=ans[cur].includes(l)?ans[cur].filter(x=>x!==l):[...ans[cur],l];
+ show(cur)}
+function done(i){return Q[i].t==='m'?ans[i].length>0:String(ans[i])!==''}
+function pal(){$('pal').innerHTML=Q.map((_,i)=>`<button class="${rv[i]?'rv':done(i)?'ans':''} ${i===cur?'cur':''}" onclick="show(${i})">${i+1}</button>`).join('')}
+function go(d){show(Math.min(Q.length-1,Math.max(0,cur+d)))}
+function rev(){rv[cur]=!rv[cur];pal()}
+function clr(){ans[cur]=Q[cur].t==='m'?[]:'';show(cur)}
+function submit(auto){
+ if(!auto){const left=Q.filter((_,i)=>!done(i)).length;if(!confirm(left+' question(s) unanswered. Submit the test now?'))return}
+ clearInterval(tick);let sc=0,c=0,w=0,sk=0,pt=0,rows='';
+ Q.forEach((q,i)=>{const u=q.t==='m'?ans[i].slice().sort().join(''):String(ans[i]).trim(),a=String(q.a);let st;
+  if(!u){sk++;st='—'}else if(u===a){c++;sc+=MK[q.t];st='<span class="ok">+'+MK[q.t]+'</span>'}
+  else if(q.t==='m'&&!ans[i].some(x=>!a.includes(x))){pt++;const p=ans[i].length;sc+=p;st='<span class="ok">+'+p+' (partial)</span>'}
+  else{w++;const p=q.t==='s'?-1:q.t==='m'?-2:0;sc+=p;st='<span class="bad">'+p+'</span>'}
+  rows+=`<tr><td>${i+1}</td><td>${u||'—'}</td><td>${a}</td><td>${st}</td></tr>`});
+ $('exam').classList.add('hide');$('res').classList.remove('hide');
+ const txt=`Name: ${user.n}\nEmail: ${user.e}\nScore: ${sc}/100\nCorrect: ${c}, Partial: ${pt}, Wrong: ${w}, Skipped: ${sk}`;
+ $('res').innerHTML=`<div class="card"><h2>Test submitted${auto?' (time up)':''}</h2><p><b>${user.n}</b> · ${user.e}</p>
+ <h1>${sc} / 100</h1><p>Correct: ${c} · Partial: ${pt} · Wrong: ${w} · Not attempted: ${sk}</p>
+ <button class="p" onclick="navigator.clipboard&&navigator.clipboard.writeText(\`${txt.replace(/\n/g,'\\n')}\`);this.textContent='Copied'">Copy result summary</button></div>
+ <div class="card" style="overflow-x:auto"><table width="100%" cellpadding="6"><tr align="left"><th>Q</th><th>Your answer</th><th>Correct</th><th>Marks</th></tr>${rows}</table></div>`;
+ scrollTo(0,0);
+}
+addEventListener('beforeunload',e=>{if(!$('exam').classList.contains('hide')){e.preventDefault();e.returnValue=''}});
+</script></body></html>
